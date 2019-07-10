@@ -4,9 +4,9 @@
     Departamento de Sistemas Elétricos de Automação e Energia
     Microcontroladores ENG10032
 
-    André Dexheimer Carneiro 00243653
-    Camilla Stefani Schmidt 00237738
-    Henrique Ecker Pchara 00213945
+    Camilla Schmidt - 237738
+    Henrique Valcanaia - 240501
+    Rodolfo Antoniazzi - 252848
 
     This API provides basic controls over the Quanser 2DSFJE Robot
 
@@ -46,14 +46,15 @@
 #include <sys/types.h>
 #include <linux/spi/spidev.h>
 
-// IO 00 gpio11 as output(ENABLE)
+// IO 00 gpio11 as output (DIRECTION)
 // IO 01 gpio12 as input (ELB2)
 // IO 02 gpio13 as input (ELB1)
 // IO 03 pwm1 as output (MOTOR)
-// IO 04 gpio6 as input(LFLAG_1)
+// IO 04 gpio6 as input (LFLAG_1)
 // IO 05 gpio0 as input (DFLAG_1)
 // IO 06 gpio1 as output (INDEX_1)
 // IO 07 gpio38 as output (EN_1)
+// IO 09 gpio4 as output (ENABLE)
 // IO 10 gpio10 as output (SS)
 // IO 11 (MOSI)
 // IO 12 (MISO)
@@ -67,7 +68,8 @@
 // Output pins
 # define INDEX "/sys/class/gpio/gpio1/value"
 # define EN "/sys/class/gpio/gpio6/value"
-# define ENABLE "/sys/class/gpio/gpio38/value"
+# define DIRECTION "/sys/class/gpio/gpio38/value"
+# define ENABLE "/sys/class/gpio/gpio4/value"
 // PWM pin
 #define PWM_DUTYCYCLE "/sys/class/pwm/pwmchip0/pwm1/duty_cycle"
 #define PWM_ENABLE "/sys/class/pwm/pwmchip0/pwm1/enable"
@@ -148,7 +150,7 @@ typedef struct fds{
     // Inputs
     int lflag, dflag, elb1, elb2;
     // Outputs
-    int index, en, enable;
+    int index, en, enable, direction;
     // PWM
     int pwmDutyCycle, pwmEnable, pwmPeriod;
     // SPI
@@ -239,12 +241,15 @@ extern "C"
     extern void finish();
 
     /*
-    Testa todos os pinos utilizados pela API.
-    */
+     Testa todos os pinos utilizados pela API.
+     `numIterations`: número de vezes que serão testados todos os pinos
+     `interval`: intervalo, em ms, entre cada iteração de teste
+     */
     extern void testPins(int numIterations, int interval);
 
     /*
-    Lê o valor de um pino GPIO.
+    
+     Lê o valor de um pino GPIO especificado pelo descritor de arquivo `fd`.
 
     Valores de retorno:
         -1 -> Erro acessando os pinos
@@ -254,7 +259,7 @@ extern "C"
     extern int readGPIO(int fd);
 
     /*
-    Escreve um valor em algum pino de saída.
+    Escreve o valor `data` no arquivo do pino especificado pelo descritor `fd`
 
     Valores de retorno:
         -1 -> Erro escrevendo dado
@@ -263,8 +268,7 @@ extern "C"
     extern int writeGPIO(int fd, int data);
 
     /*
-    Determina o valor do duty cycle do sinal PWM a partir de um valor entre
-    0 e 100 passado como parâmetro.
+     Seta o percentual(0~100) do duty cycle do sinal PWM a partir do paramêtro `value`
 
     Valores de retorno:
         -1 -> Erro configurando sinal PWM
