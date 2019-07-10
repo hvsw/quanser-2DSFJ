@@ -14,7 +14,7 @@ case "$1" in
     start|restart|force-reload)
 
 
-        # IO 00 gpio11 as output(ENABLE) --------------------------------------------------------
+        # IO 00 gpio11 as output(DIRECTION) --------------------------------------------------------
         # Linux: gpio11
         if [ ! -d /sys/class/gpio/gpio11 ] ; then
             echo -n "11" > /sys/class/gpio/export
@@ -227,6 +227,28 @@ case "$1" in
         fi
         echo -n "in" > /sys/class/gpio/gpio39/direction
 
+        # IO 09 gpio4 as output (ENABLE) ---------------------------------------------------
+        # Linux: gpio4
+        if [ ! -d /sys/class/gpio/gpio4 ] ; then
+            echo -n "4" > /sys/class/gpio/export
+        fi
+        echo -n "out" > /sys/class/gpio/gpio4/direction
+        chgrp gpio /sys/class/gpio/gpio4/value
+        chmod g+rw /sys/class/gpio/gpio4/value
+
+        # Level shifter: gpio22 (in)
+        if [ ! -d /sys/class/gpio/gpio22 ] ; then
+            echo -n "22" > /sys/class/gpio/export
+        fi
+        echo -n "out" > /sys/class/gpio/gpio22/direction
+        echo -n "0" > /sys/class/gpio/gpio22/value
+
+        # Resistor: gpio23
+        if [ ! -d /sys/class/gpio/gpio23 ] ; then
+            echo -n "23" > /sys/class/gpio/export
+        fi
+        echo -n "in" > /sys/class/gpio/gpio23/direction
+
         # IO 10 gpio10 as output (SS) ------------------------------------------------------
         # Linux: gpio10 - nao precisa, gerado automaticamente
 
@@ -359,6 +381,10 @@ case "$1" in
         # IO 07
         echo -n "38" > /sys/class/gpio/unexport
         echo -n "39" > /sys/class/gpio/unexport
+        # IO 09 ENABLE
+        echo -n "4" > /sys/class/gpio/unexport
+        echo -n "22" > /sys/class/gpio/unexport
+        echo -n "23" > /sys/class/gpio/unexport
         # IO 10
         echo -n "26" > /sys/class/gpio/unexport
         echo -n "27" > /sys/class/gpio/unexport
