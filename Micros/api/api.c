@@ -10,7 +10,7 @@
 
     This API provides basic controls over the Quanser 2DSFJE Robot
 
-    Copyright (c) 2018 André Dexheimer Carneiro, Camilla Stefani Schmidt and Henrique Ecker Pchara
+    Copyright (c) 2019 Camilla Stefani Schmidt, Henrique Valcanaia, Rodolfo Antoniazzi
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -384,14 +384,14 @@ int writeGPIO(int fd, int data) {
 }
 
 // -----------------------------------------------------------------------------
-int setPWM(double value) {
-    if (value < 0 || value > 100.0) {
+int setPWM(double dutyCyclePercentage) {
+    if (dutyCyclePercentage < 0 || dutyCyclePercentage > 100.0) {
         fprintf(stderr, "%s - Value must be between 0 and 100\n", __FUNCTION__);
-        return -1;
+        return -2;
     }
 
     int period = readGPIO(_fd.pwmPeriod);
-    int dutyCycle = (float)period*value/100.0;
+    int dutyCycle = (float)period*dutyCyclePercentage/100.0;
     if (writeGPIO(_fd.pwmDutyCycle, dutyCycle) < 0) {
         fprintf(stderr, "%s - Error writing duty cycle\n", __FUNCTION__);
         return -1;
@@ -404,7 +404,7 @@ int setPWM(double value) {
     // corresponde ao motor girando em velocidade máxima em um sentido e
     // ciclo de trabalho de 100% corresponde ao motor girando em velocidade
     // máxima no sentido oposto
-    int direction = (value > 50);
+    int direction = (dutyCyclePercentage > 50);
     writeGPIO(_fd.direction, direction);
     
     return dutyCycle;

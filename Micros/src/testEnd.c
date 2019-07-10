@@ -4,13 +4,13 @@
     Departamento de Sistemas Elétricos de Automação e Energia
     Microcontroladores ENG10032
 
-    André Dexheimer Carneiro 00243653
-    Camilla Stefani Schmidt 00237738
-    Henrique Ecker Pchara 00213945
+    Camilla Schmidt - 237738
+    Henrique Valcanaia - 240501
+    Rodolfo Antoniazzi - 252848
 
     This API provides basic controls over the Quanser 2DSFJE Robot
 
-    Copyright (c) 2018 André Dexheimer Carneiro, Camilla Stefani Schmidt and Henrique Ecker Pchara
+    Copyright (c) 2019 Camilla Stefani Schmidt, Henrique Valcanaia, Rodolfo Antoniazzi
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

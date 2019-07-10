@@ -10,7 +10,7 @@
 
     This API provides basic controls over the Quanser 2DSFJE Robot
 
-    Copyright (c) 2018 André Dexheimer Carneiro, Camilla Stefani Schmidt and Henrique Ecker Pchara
+    Copyright (c) 2019 Camilla Schmidt, Henrique Valcanaia, Rodolfo Antoniazzi
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -271,6 +271,7 @@ extern "C"
      Seta o percentual(0~100) do duty cycle do sinal PWM a partir do paramêtro `value`
 
     Valores de retorno:
+        -2 -> Erro valor fora do intervalo permitido(0~100)
         -1 -> Erro configurando sinal PWM
         >0 -> Valor do duty cycle atribuído ao sinal PWM
     */
