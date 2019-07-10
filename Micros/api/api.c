@@ -59,7 +59,6 @@ int setMotorVoltage(double volts) {
     }
 
     dutyCycle = (volts + 27) / 54;
-    writeGPIO(_fd.enable, 0);
     return setPWM(dutyCycle);
 }
 
@@ -221,7 +220,7 @@ int init() {
     }
     
     // Habilita controle do motor/ponte H
-    writeGPIO(_fd.ENABLE, 1);
+    writeGPIO(_fd.enable, 1);
     
     return 1;
 }
@@ -399,7 +398,14 @@ int setPWM(double value) {
     }
 
     writeGPIO(_fd.pwmEnable, 1);
-    writeGPIO(_fd.enable, 0);
+    
+    // Conforme especificação:
+    // O acionamento por PWM deve ser tal que um ciclo de trabalho de 0%
+    // corresponde ao motor girando em velocidade máxima em um sentido e
+    // ciclo de trabalho de 100% corresponde ao motor girando em velocidade
+    // máxima no sentido oposto
+    int direction = (value > 50);
+    writeGPIO(_fd.direction, direction);
     
     return dutyCycle;
 }
